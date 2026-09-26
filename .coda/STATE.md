@@ -1,23 +1,28 @@
 # Current Session State
 
 **Current Spec:**
-- `specs/001-frontend-scaffold` (T001–T013 `[x]` — DONE, all validation gates green locally)
+- `specs/003-shortener-form` — Implemented, all gates green (build/lint/test 24/24). Not yet committed.
 
 **Objective:**
-- URL shortener frontend client (Alpine.js + Tailwind, Vite + bun) consuming the external backend API. Scaffold complete: bundled Alpine 3, Tailwind v4 (`@tailwindcss/vite`), Biome 2.5, Vitest + happy-dom.
+- Shortening form with client-side URL validation and backend API client for `POST /api/shorten`.
 
 **Context (Why):**
-- 001 delivers the build pipeline only — deploy wiring is a follow-up spec. `bun run build` → `dist/` (verified CDN-free).
-- API base URL env-driven: `VITE_API_BASE_URL` (dev default `http://localhost:8080`), documented in `.env.example`.
-- CI (`.github/workflows/ci.yml`) runs the same gates: `bun install --frozen-lockfile` → build → lint → test.
+- Live-verified contract: `POST /api/shorten` `{"url"}` → 201 `{"code", "long_url"}` — no `short_url`, no domain (backend spec 009). Frontend derives short URL from its own origin: `${window.location.origin}/api/${code}`.
+- Validation mirrors backend rules: non-empty (trimmed), parseable, scheme allowlist `http`/`https`.
+- UX: result as clickable link + Copy button below form; long URL kept in input; error cleared on edit; submit disabled while submitting.
+- Biome override added for `index.html` (`useAnchorContent`/`useValidAnchor` off) — Biome cannot statically see Alpine-bound `x-bind:href`/`x-text`.
 
 **Modified/Uncommitted Files:**
-- Full scaffold: `package.json`, `bun.lock`, `vite.config.js`, `biome.json`, `index.html`, `src/main.js`, `src/config.js`, `src/style.css`, `src/main.test.js`, `.env.example`, `.gitignore`
-- Tracking: `specs/001-frontend-scaffold/spec-plan-tasks.md`, `.coda/feature.json`, `.coda/STATE.md`
+- `src/validation/urlRules.js` + test (new)
+- `src/api/shortener.js` + test (new)
+- `src/stores/shortener.js` + test (new)
+- `src/shortener.test.js` (new, DOM tests)
+- `index.html` (form UI), `src/main.js` (store registration), `biome.json` (a11y override)
+- `specs/003-shortener-form/spec-plan-tasks.md` (new), `.coda/feature.json`, `.coda/STATE.md`
 
 **Blockers/Unresolved Bugs:**
 - None open.
 
 **Next Immediate Steps:**
-- Commit the scaffold (one-liner, files grouped by spec).
-- `/specify` for 002-shortener-form — shortening form with client-side validation and the backend API client.
+- Commit 003 (suggested: `feat(shortener-form): shortening form with validation and API client`).
+- Live smoke test against https://demo.vijote.dev after deploy.

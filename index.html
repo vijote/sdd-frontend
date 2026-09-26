@@ -6,14 +6,67 @@
     <title>URL Shortener</title>
   </head>
   <body class="bg-gray-50 min-h-screen">
-    <div
-      id="app"
-      class="max-w-xl mx-auto px-4 py-16"
-      x-data="{ ready: false }"
-      x-init="ready = true"
-    >
+    <div id="app" class="max-w-xl mx-auto px-4 py-16" x-data>
       <h1 class="text-3xl font-bold text-gray-900 mb-8">URL Shortener</h1>
-      <p class="text-gray-600" x-show="ready" x-cloak>Scaffold ready.</p>
+
+      <form
+        class="flex gap-2"
+        @submit.prevent="$store.shortener.submit()"
+        data-testid="shorten-form"
+      >
+        <input
+          type="text"
+          name="url"
+          placeholder="https://example.com/very/long/url"
+          class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          x-model="$store.shortener.longUrl"
+          @input="$store.shortener.onInput()"
+          data-testid="url-input"
+        />
+        <button
+          type="submit"
+          class="rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          :disabled="$store.shortener.isSubmitting"
+          data-testid="submit-button"
+        >
+          <span x-show="!$store.shortener.isSubmitting">Shorten</span>
+          <span x-show="$store.shortener.isSubmitting" x-cloak>Shortening…</span>
+        </button>
+      </form>
+
+      <p
+        class="mt-3 text-sm text-red-600"
+        x-show="$store.shortener.error !== null"
+        x-text="$store.shortener.error"
+        data-testid="error-message"
+      ></p>
+
+      <div
+        class="mt-6 rounded-md border border-gray-200 bg-white p-4"
+        x-show="$store.shortener.shortUrl !== null"
+        x-cloak
+        data-testid="result-card"
+      >
+        <p class="text-sm text-gray-500 mb-1">Your short URL:</p>
+        <div class="flex items-center gap-2">
+          <a
+            x-bind:href="$store.shortener.shortUrl"
+            class="text-blue-600 font-medium hover:underline break-all"
+            x-text="$store.shortener.shortUrl"
+            target="_blank"
+            rel="noopener"
+            data-testid="short-url-link"
+          ></a>
+          <button
+            type="button"
+            class="ml-auto shrink-0 rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+            @click="$store.shortener.copy()"
+            data-testid="copy-button"
+          >
+            Copy
+          </button>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
