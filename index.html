@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div
+      id="app"
+      class="max-w-xl mx-auto px-4 py-16"
+      x-data="{ ready: false }"
+      x-init="ready = true"
+    >
+      <h1 class="text-3xl font-bold text-gray-900 mb-8">URL Shortener</h1>
+      <p class="text-gray-600" x-show="ready" x-cloak>Scaffold ready.</p>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
