@@ -23,7 +23,7 @@ describe('shortenUrl', () => {
     const result = await shortenUrl('https://example.com/x');
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/api/shorten'),
+      '/api/shorten',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
